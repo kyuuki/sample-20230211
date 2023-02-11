@@ -1,0 +1,13 @@
+<% if task.errors.present? %>
+  <ul>
+    <% task.errors.full_messages.each do |message| %>
+      <li><%= message %>
+    <% end %>
+  </ul> 
+<% end %>
+
+<%= form_with model: task do |form| %>
+  タイトル: <%= form.text_field :title %><br>
+  内容: <%= form.text_field :content %><br>
+  <%= form.submit %>
+<% end %>
