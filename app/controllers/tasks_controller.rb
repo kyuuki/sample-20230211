@@ -18,7 +18,7 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
 
     if @task.save
-      redirect_to tasks_url, notice: "登録しました。"
+      redirect_to task_url(@task), notice: "登録しました。"
     else
       render "new"
     end
@@ -33,7 +33,7 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
 
     if @task.update(task_params)
-      redirect_to tasks_url, notice: "更新しました。"
+      redirect_to task_url(@task), notice: "更新しました。"
     else
       render "edit"
     end
