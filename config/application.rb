@@ -27,5 +27,7 @@ module TaskApp
                        controller_specs: false,
                        request_specs: false
     end
+
+    config.hosts << "rails-dev.akoba.xyz"
   end
 end
