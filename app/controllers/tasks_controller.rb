@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   # 一覧画面
   def index
-    @tasks = Task.all
+    @tasks = Task.all.order(created_at: :desc)
   end
 
   # 詳細画面
