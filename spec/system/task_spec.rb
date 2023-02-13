@@ -13,6 +13,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         # ここに「タスク詳細」というラベル名の入力欄に内容をfill_in（入力）する処理を書く
         fill_in "タイトル", with: "title1"
         fill_in "内容", with: "content1"
+        fill_in "終了期限", with: "2020-01-01"
+        select "未着手", from: "task_status"
+        select "高", from: "task_priority"
 
         # 3. 「登録する」というvalue（表記文字）のあるボタンをクリックする
         # ここに「登録する」というvalue（表記文字）のあるボタンをclick_onする（クリックする）する処理を書く
@@ -23,6 +26,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         # ここにタスク詳細ページに、テストコードで作成したデータがタスク詳細画面にhave_contentされているか（含まれているか）を確認（期待）するコードを書く
         expect(page).to have_content 'title1'
         expect(page).to have_content 'content1'
+        expect(page).to have_content '2020-01-01'
+        expect(page).to have_content '未着手'
+        expect(page).to have_content '高'
       end
     end
   end
@@ -66,6 +72,52 @@ RSpec.describe 'タスク管理機能', type: :system do
 
         expect(page).to have_content "title2"
         expect(page).to have_content "content2"
+      end
+    end
+  end
+
+  describe '検索機能' do
+    before do
+      # 必要に応じて、テストデータの内容を変更して構わない
+      FactoryBot.create(:task, title: "task", status: 1)
+      FactoryBot.create(:task, title: "sample", status: 2)
+    end
+
+    context 'タイトルであいまい検索をした場合' do
+      it "検索キーワードを含むタスクで絞り込まれる" do
+        visit tasks_path
+
+        # タスクの検索欄に検索ワードを入力する (例: task)
+        fill_in "タイトル", with: "ask"
+
+        # 検索ボタンを押す
+        click_button "検索"
+
+        expect(page).to have_content 'task'
+      end
+    end
+
+    context 'ステータス検索をした場合' do
+      it "ステータスに完全一致するタスクが絞り込まれる" do
+        # ここに実装する
+        # プルダウンを選択する「select」について調べてみること
+        visit tasks_path
+        select "着手中", from: "search_status"
+        click_button "検索"
+
+        expect(page).to have_content 'sample'
+      end
+    end
+
+    context 'タイトルのあいまい検索とステータス検索をした場合' do
+      it "検索キーワードをタイトルに含み、かつステータスに完全一致するタスク絞り込まれる" do
+        # ここに実装する
+        visit tasks_path
+        fill_in "タイトル", with: "amp"
+        select "着手中", from: "search_status"
+        click_button "検索"
+
+        expect(page).to have_content 'sample'
       end
     end
   end

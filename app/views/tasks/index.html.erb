@@ -1,14 +1,63 @@
 <h2>タスク一覧</h2>
 
-<ul>
-  <% @tasks.each do |task| %>
-  <li>
-    <span class="task-title"><%= task.title %></span>
-    <%= link_to "詳細", task %>
-    <%= link_to "編集", edit_task_path(task) %>
-    <%= link_to "削除", task, method: :delete %>
-  </li>
+<div class="col my-3">
+  <%= form_with url: tasks_path, method: :get, local: true do |form| %>
+    <%= form.label :search_title, "タイトル" %>
+    <%= form.text_field :search_title, value: params[:search_title] %>
+
+    <%= form.label :search_status, "ステータス" %>
+    <%= form.select :search_status, { "未着手": 1, "着手中": 2, "完了": 3 }, { include_blank: true, selected: params[:search_status] } %>
+
+    <%= form.submit "検索", class: "btn btn-primary" %>
   <% end %>
+</div>
+
+<div class="col my-3">
+  <%= paginate @tasks %>
+</div>
+  
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th><%= link_to "終了期限", tasks_path(sort_deadline: true) %></th>
+      <th>ステータス</th>
+      <th><%= link_to "優先順位", tasks_path(sort_priority: true) %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+    <tr>
+      <td class="task-title"><%= task.title %></td>
+      <td class="col-2"><%= task.deadline %></td>
+      <td class="col-2">
+        <% if task.status == 1 %>
+          未着手
+        <% elsif task.status == 2 %>
+          着手中
+        <% elsif task.status == 3 %>
+          完了
+        <% end %>
+      </td>
+      <td class="col-2">
+        <% if task.priority == 1 %>
+          高
+        <% elsif task.priority == 2 %>
+          中
+        <% elsif task.priority == 3 %>
+          低
+        <% end %>
+      </td>
+      <td class="col-3">
+        <%= link_to "詳細", task %>
+        <%= link_to "編集", edit_task_path(task) %>
+        <%= link_to "削除", task, method: :delete %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
 </ul>
+</table>
 
 <%= link_to "新規登録", new_task_path %>

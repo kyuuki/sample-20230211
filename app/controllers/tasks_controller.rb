@@ -1,7 +1,23 @@
 class TasksController < ApplicationController
   # 一覧画面
   def index
-    @tasks = Task.all.order(created_at: :desc)
+    @tasks = Task.page(params[:page])
+
+    if params[:search_title].present?
+      @tasks = @tasks.search_title(params[:search_title])
+    end
+
+    if params[:search_status].present?
+      @tasks = @tasks.search_status(params[:search_status])
+    end
+
+    if params[:sort_deadline].present?
+      @tasks = @tasks.order(:deadline)
+    elsif  params[:sort_priority].present?
+      @tasks = @tasks.order(:priority)
+    else
+      @tasks = @tasks.order(created_at: :desc)
+    end
   end
 
   # 詳細画面
@@ -51,6 +67,6 @@ class TasksController < ApplicationController
 
   # Strong Parameters
   def task_params
-    params.require(:task).permit(:title, :content)
+    params.require(:task).permit(:title, :content, :deadline, :status, :priority)
   end
 end

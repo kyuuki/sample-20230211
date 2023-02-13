@@ -61,3 +61,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 #gem 'ruby 3.0.1'
 
 gem 'rename'
+gem 'kaminari'

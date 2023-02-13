@@ -1,20 +1,33 @@
 <% if task.errors.present? %>
-  <ul>
-    <% task.errors.full_messages.each do |message| %>
-      <li><%= message %>
-    <% end %>
-  </ul>
+  <div class="alert alert-danger">
+    <ul>
+      <% task.errors.full_messages.each do |message| %>
+        <li><%= message %>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
+  
 <%= form_with model: task do |form| %>
-  <div>
+  <div class="form-group">
     <%= form.label :title, "タイトル" %>
-    <%= form.text_field :title %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
-  <div>
+  <div class="form-group">
     <%= form.label :content, "内容" %>
-    <%= form.text_field :content %>
+    <%= form.text_field :content, class: "form-control" %>
   </div>
-  <div>
-    <%= form.submit "保存" %>
+  <div class="form-group">
+    <%= form.label :deadline, "終了期限" %>
+    <%= form.date_field :deadline, class: "form-control" %>
   </div>
+  <div class="form-group">
+    <%= form.label :status, "ステータス" %>
+    <%= form.select :status, { "未着手": 1, "着手中": 2, "完了": 3 }, {}, { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+    <%= form.label :priority, "優先順位" %>
+    <%= form.select :priority, { "高": 1, "中": 2, "低": 3 }, {}, { class: "form-control" } %>
+  </div>
+  <%= form.submit "保存", class: "btn btn-primary" %>
 <% end %>
