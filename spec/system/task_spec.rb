@@ -1,5 +1,14 @@
 require 'rails_helper'
 RSpec.describe 'タスク管理機能', type: :system do
+  let!(:user1) { FactoryBot.create(:user, name: "user1", email: "user1@a.com", password: "aaaaaa") }
+
+  before do
+    visit tasks_path
+    fill_in "Email", with: "user1@a.com"
+    fill_in "Password", with: "aaaaaa"
+    click_button "Log in"
+  end
+
   describe '新規作成機能' do
     context 'タスクを新規作成した場合' do
       it '作成したタスクが表示される' do
@@ -34,9 +43,9 @@ RSpec.describe 'タスク管理機能', type: :system do
   end
 
   describe '一覧表示機能' do
-    let!(:task1) { FactoryBot.create(:task, title: 'task1', created_at: "2023-01-01") }
-    let!(:task2) { FactoryBot.create(:task, title: 'task2', created_at: "2023-01-02") }
-    let!(:task3) { FactoryBot.create(:task, title: 'task3', created_at: "2023-01-03") }
+    let!(:task1) { FactoryBot.create(:task, title: 'task1', created_at: "2023-01-01", user: user1) }
+    let!(:task2) { FactoryBot.create(:task, title: 'task2', created_at: "2023-01-02", user: user1) }
+    let!(:task3) { FactoryBot.create(:task, title: 'task3', created_at: "2023-01-03", user: user1) }
 
     before do
       # 「一覧画面に遷移した場合」や「タスクが作成日時の降順に並んでいる場合」など、contextが実行されるタイミングで、before内のコードが実行される
@@ -79,8 +88,8 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '検索機能' do
     before do
       # 必要に応じて、テストデータの内容を変更して構わない
-      FactoryBot.create(:task, title: "task", status: 1)
-      FactoryBot.create(:task, title: "sample", status: 2)
+      FactoryBot.create(:task, title: "task", status: 1, user: user1)
+      FactoryBot.create(:task, title: "sample", status: 2, user: user1)
     end
 
     context 'タイトルであいまい検索をした場合' do

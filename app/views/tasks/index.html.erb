@@ -23,6 +23,7 @@
       <th><%= link_to "終了期限", tasks_path(sort_deadline: true) %></th>
       <th>ステータス</th>
       <th><%= link_to "優先順位", tasks_path(sort_priority: true) %></th>
+      <th>作成者</th>
       <th></th>
     </tr>
   </thead>
@@ -49,6 +50,7 @@
           低
         <% end %>
       </td>
+      <td class="col-2"><%= task.user.name %></td>
       <td class="col-3">
         <%= link_to "詳細", task %>
         <%= link_to "編集", edit_task_path(task) %>

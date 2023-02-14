@@ -6,5 +6,6 @@ FactoryBot.define do
     deadline { '2020-01-01' }
     status { 1 }
     priority { 1 }
+    user
   end
 end

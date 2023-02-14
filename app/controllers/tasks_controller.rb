@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
   # 一覧画面
   def index
-    @tasks = Task.page(params[:page])
+    @tasks = current_user.tasks.page(params[:page])
 
     if params[:search_title].present?
       @tasks = @tasks.search_title(params[:search_title])
@@ -32,6 +32,7 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
+    @task.user = current_user
 
     if @task.save
       redirect_to task_url(@task), notice: "登録しました。"
